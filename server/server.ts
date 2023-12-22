@@ -26,7 +26,8 @@ app.route('/api/courses/:id').put(saveCourse);
 
 app.route('/api/login').post(loginUser);
 
-const httpServer = app.listen(9000, () => {
+// Updated to available ports, also in proxy.json
+const httpServer = app.listen(9001, () => {
     console.log("HTTP REST API Server running at http://localhost:" + httpServer.address()["port"]);
 });
 
