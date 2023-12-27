@@ -1,7 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Course } from '../model/course';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { CourseDialogComponent } from '../course-dialog/course-dialog.component';
+import { filter, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'courses-card-list',
@@ -13,6 +14,10 @@ export class CoursesCardListComponent {
   // Takes input of courses
   @Input()
   courses:Course[] = [];
+
+  // Outputs
+  @Output()
+  private coursesChanged = new EventEmitter();
 
   // Constructor with material dialog
   constructor(private dialog: MatDialog){
@@ -33,6 +38,12 @@ export class CoursesCardListComponent {
 
     // Open dialog box
     const dialogRef = this.dialog.open(CourseDialogComponent, dialogConfig);
+
+    // After closed, emit
+    dialogRef.afterClosed().pipe(
+      filter(val => !!val), // If value occurs
+      tap(() => this.coursesChanged.emit())
+    ).subscribe();
 
   }
 

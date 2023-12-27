@@ -8,14 +8,20 @@
         <mat-tab label="Beginners">
 
           <!-- Observable needs (name | async) to subscribe to it for updates -->
-          <courses-card-list [courses]="beginnerCourses$ | async"></courses-card-list>
+          <courses-card-list [courses]="beginnerCourses$ | async"
+            (coursesChanged)="reloadCourses()">
+
+          </courses-card-list>
 
         </mat-tab>
 
         <mat-tab label="Advanced">
 
           <!-- Observable needs (name | async) to subscribe to it for updates -->
-          <courses-card-list [courses]="advancedCourses$ | async"></courses-card-list>
+          <courses-card-list [courses]="advancedCourses$ | async"
+            (coursesChanged)="reloadCourses()">
+
+          </courses-card-list>
 
         </mat-tab>
 

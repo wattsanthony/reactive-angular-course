@@ -23,33 +23,38 @@ export class HomeComponent implements OnInit {
 
   // Initialisation
   ngOnInit() {
+    // Load courses
+    this.reloadCourses();
+  }
 
-      // Variable holding courses returned - $ on name means observable
-      const courses$ = this.coursesService.loadAllCourses().pipe(
-        // Pipe to map
-        map(
-          // Sort using the sort courses by seq no filter function
-          courses => courses.sort(sortCoursesBySeqNo))
-      );
+  // Function to reload courses
+  reloadCourses(){
+    // Variable holding courses returned - $ on name means observable
+    const courses$ = this.coursesService.loadAllCourses().pipe(
+      // Pipe to map
+      map(
+        // Sort using the sort courses by seq no filter function
+        courses => courses.sort(sortCoursesBySeqNo))
+    );
 
-      // Derive courses into the beginner and advanced courses
-      this.beginnerCourses$ = courses$.pipe(
-        // Pipe to map
-        map(
-          courses => courses.filter(
-            // Filter by beginner category
-            course => course.category === "BEGINNER"
-        ))
-      );
+    // Derive courses into the beginner and advanced courses
+    this.beginnerCourses$ = courses$.pipe(
+      // Pipe to map
+      map(
+        courses => courses.filter(
+          // Filter by beginner category
+          course => course.category === "BEGINNER"
+      ))
+    );
 
-      this.advancedCourses$ = courses$.pipe(
-        // Pipe to map
-        map(
-          courses => courses.filter(
-            // Filter by beginner category
-            course => course.category === "ADVANCED"
-        ))
-      );
+    this.advancedCourses$ = courses$.pipe(
+      // Pipe to map
+      map(
+        courses => courses.filter(
+          // Filter by beginner category
+          course => course.category === "ADVANCED"
+      ))
+    );
   }
 }
 

@@ -31,4 +31,13 @@ export class CoursesService {
             shareReplay()
         );
     }
+
+    // Sends changes to the api
+    saveCourse(courseId:string, changes:Partial<Course>):Observable<any>{
+        // Return put request to api with changes
+        return this.http.put(`/api/courses/${courseId}`, changes).pipe(
+            // Pipe to shareReplay to reuse http instance
+            shareReplay()
+        )
+    }
 }
