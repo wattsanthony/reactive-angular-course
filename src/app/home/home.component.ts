@@ -3,7 +3,7 @@ import {Course, sortCoursesBySeqNo} from '../model/course';
 import {interval, noop, Observable, of, throwError, timer} from 'rxjs';
 import {catchError, delay, delayWhen, filter, finalize, map, retryWhen, shareReplay, tap} from 'rxjs/operators';
 import { CoursesService } from '../services/courses.service';
-
+import { LoadingService } from '../loading/loading.service';
 
 @Component({
   selector: 'home',
@@ -17,7 +17,8 @@ export class HomeComponent implements OnInit {
   advancedCourses$: Observable<Course[]>;
 
   // Constructor with service inject
-  constructor(private coursesService: CoursesService) {
+  constructor(private coursesService: CoursesService, 
+    private loadingService:LoadingService) {
 
   }
 
@@ -29,6 +30,7 @@ export class HomeComponent implements OnInit {
 
   // Function to reload courses
   reloadCourses(){
+
     // Variable holding courses returned - $ on name means observable
     const courses$ = this.coursesService.loadAllCourses().pipe(
       // Pipe to map
@@ -37,8 +39,11 @@ export class HomeComponent implements OnInit {
         courses => courses.sort(sortCoursesBySeqNo))
     );
 
-    // Derive courses into the beginner and advanced courses
-    this.beginnerCourses$ = courses$.pipe(
+    // Send observable to loading service to monitor
+    const loadCourses$ = this.loadingService.showLoaderUntilCompleted(courses$);
+
+    // Derive loadCourses$ into the beginner and advanced courses
+    this.beginnerCourses$ = loadCourses$.pipe(
       // Pipe to map
       map(
         courses => courses.filter(
@@ -47,7 +52,7 @@ export class HomeComponent implements OnInit {
       ))
     );
 
-    this.advancedCourses$ = courses$.pipe(
+    this.advancedCourses$ = loadCourses$.pipe(
       // Pipe to map
       map(
         courses => courses.filter(
