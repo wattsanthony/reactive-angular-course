@@ -41,7 +41,7 @@ export class HomeComponent implements OnInit {
         // Sort using the sort courses by seq no filter function
         courses => courses.sort(sortCoursesBySeqNo)
         ),
-        // Catch errors handling
+        // Catch errors handling AFTER MAP!
         catchError(
           // Error observable
           err => {
