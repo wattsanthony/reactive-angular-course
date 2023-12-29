@@ -1,0 +1,16 @@
+<!-- Uses errors$ in component to determine if hidden -->
+<!-- Also defines 'as errors' for the later ngFor -->
+<ng-container *ngIf="(errors$ | async) as errors">
+
+    <div class="messages-container" *ngIf="showMessages">
+
+        <!-- Errors used here to display -->
+        <div class="message" *ngFor="let error of errors">
+            {{error}}
+        </div>
+    
+        <mat-icon class="close" (click)="onClose()">close</mat-icon>
+    </div>
+
+</ng-container>
+
