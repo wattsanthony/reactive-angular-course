@@ -5,8 +5,7 @@ import { MessagesService } from './messages/messages.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
-  providers: [LoadingService, MessagesService] // Needed to access for components in this template
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent implements  OnInit {
 

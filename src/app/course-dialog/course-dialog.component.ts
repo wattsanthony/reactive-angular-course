@@ -8,6 +8,7 @@ import {throwError} from 'rxjs';
 import { CoursesService } from '../services/courses.service';
 import { LoadingService } from '../loading/loading.service';
 import { MessagesService } from '../messages/messages.service';
+import { CoursesStore } from '../services/courses.store';
 
 @Component({
     selector: 'course-dialog',
@@ -26,8 +27,7 @@ export class CourseDialogComponent implements AfterViewInit {
         private fb: FormBuilder,
         private dialogRef: MatDialogRef<CourseDialogComponent>,
         @Inject(MAT_DIALOG_DATA) course:Course,
-        private coursesService:CoursesService,
-        private loadingService:LoadingService,
+        private coursesStore:CoursesStore,
         private messageService:MessagesService) {
 
         this.course = course;
@@ -51,30 +51,11 @@ export class CourseDialogComponent implements AfterViewInit {
       // Get form values for changes
       const changes = this.form.value;
 
-      // Run save courses and also make observable from
-      const saveCourse$ = this.coursesService.saveCourse(this.course.id, changes).pipe(
-        // Catch errors
-        catchError(err => {
-            // Log to console
-            const message = "Could not save course.";
-            console.log(message, err);
+      // Run save courses using coursesStore - subscribe or won't work
+      this.coursesStore.saveCourse(this.course.id, changes).subscribe();
 
-            // Send to message service
-            this.messageService.showErrors(message);
-
-            // Throw error to end observable chain
-            return throwError(err);
-        })
-      );
-
-      // Send to loading service and subscribe to close on finish
-      this.loadingService.showLoaderUntilCompleted(saveCourse$).subscribe(
-        // Send value as close reference
-        val => {
-            this.dialogRef.close(val);
-        }
-      );
-
+      // Close and pass changes
+      this.dialogRef.close(changes);
     }
 
     // Close function
