@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core"
 import { Course } from "../model/course";
 import { Observable } from "rxjs";
 import { map, shareReplay } from "rxjs/operators";
+import { Lesson } from "../model/lesson";
 
 @Injectable({
     // Limits to singleton
@@ -39,5 +40,22 @@ export class CoursesService {
             // Pipe to shareReplay to reuse http instance
             shareReplay()
         )
+    }
+
+    // Searches lessons via api
+    searchLessons(search:string):Observable<Lesson[]>{
+        // Http get request
+        return this.http.get<Lesson[]>("/api/lessons", {
+            // Parameters for search filter and page size
+            params: {
+                filter: search,
+                pageSize: "100"
+            }
+        }).pipe(
+            // Map from payload
+            map(res => res["payload"]),
+            // Reuse this http request
+            shareReplay()
+        );
     }
 }

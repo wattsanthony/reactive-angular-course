@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Lesson } from '../model/lesson';
+import { Input } from '@angular/core';
 
 @Component({
   selector: 'lesson',
@@ -7,5 +9,6 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LessonComponent  {
 
-
+  @Input()
+  lesson:Lesson;
 }
