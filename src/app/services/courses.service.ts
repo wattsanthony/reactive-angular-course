@@ -16,6 +16,35 @@ export class CoursesService {
 
     }
 
+    // Loads a course by id
+    loadCoursesById(courseId:number):Observable<Course>{
+        // Returns the courses with that Id
+        return this.http.get<Course>(`/api/courses/${courseId}`)
+        .pipe(
+            shareReplay()
+        );
+    }
+
+    // Loads all course lessons
+    loadAllCourseLessons(courseId:number):Observable<Lesson[]>{
+        // Return lessons array for given courseId
+        return this.http.get<Lesson[]>('/api/lessons', {
+            params: {
+                pageSize: "10000",
+                courseId: courseId.toString()
+            }
+        }).pipe(// Pipe to map
+        map(
+            // Mapping function to grab payload
+            // so it can convert to Course[]
+            response => response['payload']
+        ),
+        // Pipe to shareReplay (reuse this instead
+        // of making multiple http requests)
+        shareReplay()
+        );
+    }
+
     // Returns an observable of course array
     loadAllCourses():Observable<Course[]>{
 
